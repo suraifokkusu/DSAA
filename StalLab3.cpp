@@ -15,10 +15,11 @@ struct Student {   //Структура, являющаяся звеном сп�
 class ListOfStudents {
 public:
     Student* head, * tail; //Указатели на адреса начала списка и его конца
-      // Количество элементов
-    int Count=0;
+    int countOfStudents=0; // Количество элементов
+
     ListOfStudents() : head(NULL), tail(NULL) {}; 
-    ~ListOfStudents(); //Инициализируем адреса как пустые
+    ~ListOfStudents();     //Инициализируем адреса как пустые
+
     // ПРОТОТИПЫ ФУНКЦИЙ 
     void AddStudent(Student* student); 
     int DeleteStudent(int indexOfDeleteStudent);
@@ -27,6 +28,8 @@ public:
     void ShowListOfStudents(); 
     void ShowStudent(int indexOfStudent);
 };
+
+//Перечисление всех возможных групп и мероприятий в виде класса
 enum GROUPS {
     PO_71,
     PM_71,
@@ -69,29 +72,29 @@ void ListOfStudents::AddStudent(Student* student) {
         tail->next = temp;
 
     // Если элемент первый, то он одновременно и голова и хвост
-    if (Count == 0)
+    if (countOfStudents == 0)
         head = tail = temp;
     else
         // иначе новый элемент - хвостовой
         tail = temp;
 
-    Count++;
+    countOfStudents++;
 }
 int ListOfStudents::DeleteStudent(int indexDeletionOfStudent) {
     
     if (indexDeletionOfStudent == -1)
         return -1; 
     //Счетчик
-    int i = 1;
+    int current = 1; //1 - самый первый элемент
 
     Student* del = head;
 
-    while(i <indexDeletionOfStudent)
+    while(current <indexDeletionOfStudent)
     {
         // Доходим до элемента, 
         // который удаляется
         del = del->next;
-        i++;
+        current++;
     }
 
     // Доходим до элемента, 
@@ -101,32 +104,31 @@ int ListOfStudents::DeleteStudent(int indexDeletionOfStudent) {
     Student* AfterDel = del->next;
 
     // Если удаляем не голову
-    if (PrevDel != 0 && Count != 1)
+    if (PrevDel != 0 && countOfStudents != 1)
         PrevDel->next = AfterDel;
     // Если удаляем не хвост
-    if (AfterDel != 0 && Count != 1)
+    if (AfterDel != 0 && countOfStudents != 1)
         AfterDel->prev = PrevDel;
 
     // Удаляются крайние?
     if (indexDeletionOfStudent == 0)
         head = AfterDel;
-    if (indexDeletionOfStudent == Count)
+    if (indexDeletionOfStudent == countOfStudents)
         tail = PrevDel;
 
     // Удаление элемента
     delete del;
 
-    Count--;
+    countOfStudents--;
     return 0; 
 }
 int  ListOfStudents::LengthOfList() {
-    return Count; 
+    return countOfStudents; 
 }
 int  ListOfStudents::FindStudent(string firstName, string secondName) {
     Student* temp = head;
-    bool studentNotFind = true;
     int indexOfStudent = 0;
-    for (int i = 0; i < Count; i++) {
+    for (int i = 0; i < countOfStudents; i++) {
         if (firstName == temp->firstName && secondName == temp->secondName)
             return i;
         temp = temp->next;
@@ -136,19 +138,19 @@ int  ListOfStudents::FindStudent(string firstName, string secondName) {
 }
 void ListOfStudents::ShowListOfStudents() {
    
-    if (Count != NULL)
+    if (countOfStudents != NULL)
 
     {
         Student* temp = head;
-        int _count = 0;
+        int current = 1;
 
         cout << "---------------------------------------------------------------" << endl;
         cout << "FULL NAME\t\tGROUP\tEVENT\t\tDATE OF EVENT" << endl;
         cout << "---------------------------------------------------------------" << endl;
 
         while (temp != NULL) {
-            _count++;
-            ShowStudent(_count);
+            ShowStudent(current);
+            current++;
             temp = temp->next;
         }
     }
@@ -157,15 +159,15 @@ void ListOfStudents::ShowListOfStudents() {
         cout << "List is empty!" << endl;
 }
 void ListOfStudents::ShowStudent(int indexOfStudent) {
-    if (indexOfStudent<1 ||indexOfStudent>Count) {
+    if (indexOfStudent<1 ||indexOfStudent>countOfStudents) {  //проверка расположения 
         cout << "Incorrect position" << endl;
         return;
     }
-    Student* temp = head;
-    int _count =1;
-    while (_count<indexOfStudent) {
+    Student* temp = head; 
+    int current =1; //Доходим до элемента
+    while (current<indexOfStudent) {
         temp = temp->next; 
-        _count++;
+        current++;
         }
     cout << temp->firstName << " " << temp->secondName << " " << temp->thirdname;  //ФИО 
     cout << "\t" << temp->group;
@@ -204,7 +206,7 @@ void eventDisplay() {
 }
 
 
-inline const char* toStringEvent(EVENTS events)
+inline const char* toStringEvent(EVENTS events)  //конверторы из классов - перечислений в строки
 {
     switch (events)
     {
@@ -298,10 +300,9 @@ int main()
            
             newStudent = new Student{ firstName, secondName, thirdName, group, event, day, month, year};
             listOfStudents.AddStudent(newStudent);
-            //delete data; 
             cout << "SUCCESS!" << endl;
             system("pause");
-            system("CLS");
+            system("CLS"); //очистка терминала
             break;
         case 2:
             cout << "Enter the first name of deletion student: ";
@@ -316,7 +317,7 @@ int main()
           else
               cout << "[Student not founded]" << endl;
             system("pause");
-            system("CLS");
+            system("CLS"); 
             break;
         case 3:
             cout << "Count of students: " << listOfStudents.LengthOfList() << endl;
