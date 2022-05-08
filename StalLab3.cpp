@@ -130,7 +130,7 @@ int  ListOfStudents::FindStudent(string firstName, string secondName) {
     int indexOfStudent = 0;
     for (int i = 0; i < countOfStudents; i++) {
         if (firstName == temp->firstName && secondName == temp->secondName)
-            return i;
+            return i+1; //возвращаем порядковый номер
         temp = temp->next;
     }
     return -1;
