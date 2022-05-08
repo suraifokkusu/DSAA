@@ -3,29 +3,29 @@
 #include <list>
 #include <stdio.h>
 
-using namespace std; 
+using namespace std;
 struct Student {   //Структура, являющаяся звеном списка
-    string firstName, secondName, thirdname; 
-    string group; 
+    string firstName, secondName, thirdname;
+    string group;
     string event;
     string day, month, year;   //либо делать динамическую матрицу по числу n студентов в списке, размерностью [n][3]; 
-    Student *next=nullptr, *prev=nullptr; //Указатели на адреса следующего и предыдущего элементов списка
+    Student* next = nullptr, * prev = nullptr; //Указатели на адреса следующего и предыдущего элементов списка
 
 };
 class ListOfStudents {
 public:
     Student* head, * tail; //Указатели на адреса начала списка и его конца
-    int countOfStudents=0; // Количество элементов
+    int countOfStudents = 0; // Количество элементов
 
-    ListOfStudents() : head(NULL), tail(NULL) {}; 
+    ListOfStudents() : head(NULL), tail(NULL) {};
     ~ListOfStudents();     //Инициализируем адреса как пустые
 
     // ПРОТОТИПЫ ФУНКЦИЙ 
-    void AddStudent(Student* student); 
+    void AddStudent(Student* student);
     int DeleteStudent(int indexOfDeleteStudent);
     int LengthOfList();
     int FindStudent(string firstName, string secondName);
-    void ShowListOfStudents(); 
+    void ShowListOfStudents();
     void ShowStudent(int indexOfStudent);
 };
 
@@ -65,7 +65,7 @@ void ListOfStudents::AddStudent(Student* student) {
     temp->month = student->month;
     temp->year = student->year;
 
-    temp->prev = tail; 
+    temp->prev = tail;
 
     // Если элементы есть?
     if (tail != NULL)
@@ -81,15 +81,15 @@ void ListOfStudents::AddStudent(Student* student) {
     countOfStudents++;
 }
 int ListOfStudents::DeleteStudent(int indexDeletionOfStudent) {
-    
+
     if (indexDeletionOfStudent == -1)
-        return -1; 
+        return -1;
     //Счетчик
-    int current = 1; //1 - самый первый элемент
+    int current = 0; //0 - самый первый элемент
 
     Student* del = head;
 
-    while(current <indexDeletionOfStudent)
+    while (current < indexDeletionOfStudent)
     {
         // Доходим до элемента, 
         // который удаляется
@@ -120,10 +120,10 @@ int ListOfStudents::DeleteStudent(int indexDeletionOfStudent) {
     delete del;
 
     countOfStudents--;
-    return 0; 
+    return 0;
 }
 int  ListOfStudents::LengthOfList() {
-    return countOfStudents; 
+    return countOfStudents;
 }
 int  ListOfStudents::FindStudent(string firstName, string secondName) {
     Student* temp = head;
@@ -137,7 +137,7 @@ int  ListOfStudents::FindStudent(string firstName, string secondName) {
 
 }
 void ListOfStudents::ShowListOfStudents() {
-   
+
     if (countOfStudents != NULL)
 
     {
@@ -154,26 +154,27 @@ void ListOfStudents::ShowListOfStudents() {
             temp = temp->next;
         }
     }
-        
+
     else
         cout << "List is empty!" << endl;
 }
 void ListOfStudents::ShowStudent(int indexOfStudent) {
-    if (indexOfStudent<1 ||indexOfStudent>countOfStudents) {  //проверка расположения 
+    if (indexOfStudent<0 || indexOfStudent>countOfStudents) {  //проверка расположения 
         cout << "Incorrect position" << endl;
         return;
     }
-    Student* temp = head; 
-    int current =1; //Доходим до элемента
-    while (current<indexOfStudent) {
-        temp = temp->next; 
+    Student* temp = head;
+    int current = 1; //Доходим до элемента
+    while (current < indexOfStudent) {
+        temp = temp->next;
         current++;
-        }
-    cout << temp->firstName << " " << temp->secondName << " " << temp->thirdname;  //ФИО 
+    }
+
+    cout << indexOfStudent<<". "<< temp->firstName << " " << temp->secondName << " " << temp->thirdname;  //ФИО 
     cout << "\t" << temp->group;
     cout << "\t" << temp->event;
     cout << "\t";
-        cout << temp->day << "."<<temp->month<<"." << temp->year;
+    cout << temp->day << "." << temp->month << "." << temp->year;
     cout << endl;
 }
 
@@ -184,6 +185,7 @@ void mainDisplay() {
     cout << "3. Show count of students in list." << endl;
     cout << "4. Find a student by name." << endl;
     cout << "5. Show list." << endl;
+    cout << "6. Clear the terminal." << endl;
     cout << "0. Exit" << endl;
     cout << "---------------------------------------------------------------" << endl;
     cout << "ENTER THE NUMBER OF OPERATION" << endl;
@@ -194,7 +196,7 @@ void groupDisplay() {
     cout << "\t2. PM-71" << endl;
     cout << "\t3. F-71" << endl;
     cout << "\t4. KB-71" << endl;
-    cout << "\tENTER THE NUMBER OF OPERATION"<<endl; 
+    cout << "\tENTER THE NUMBER OF OPERATION" << endl;
     cout << "\t-> ";
 }
 void eventDisplay() {
@@ -272,7 +274,7 @@ int main()
                 break;
             default:
                 cout << "Unknown operation, group will be null" << endl;
-                group = "NULL"; 
+                group = "NULL";
                 break;
             }
             cout << "Сhoose event of student: " << endl;
@@ -295,34 +297,32 @@ int main()
                 break;
             }
 
-            cout << "Enter the date of event (example: 01.12.2000): ";
-            cin >> day >> month >> year; 
-           
-            newStudent = new Student{ firstName, secondName, thirdName, group, event, day, month, year};
+            cout << "Enter the date of event (example: 01 12 2000): ";
+            cin >> day >> month >> year;
+
+            newStudent = new Student{ firstName, secondName, thirdName, group, event, day, month, year };
             listOfStudents.AddStudent(newStudent);
             cout << "SUCCESS!" << endl;
             system("pause");
-            system("CLS"); //очистка терминала
             break;
         case 2:
-            cout << "Enter the first name of deletion student: ";
-            cin >> firstName;
-            cout << "Enter the second name of deletion student: ";
-            cin >> secondName;
-            indexOfDeletionStudent = listOfStudents.FindStudent(firstName, secondName);
-            if (indexOfDeletionStudent != -1) {
-                listOfStudents.DeleteStudent(indexOfDeletionStudent);
-                cout << "SUCCESS!" << endl;
+            if (listOfStudents.LengthOfList()) {
+                cout << "Enter the number of deletion student: ";
+                cin >> indexOfDeletionStudent;
+                indexOfDeletionStudent -= 1;                         //Вводили порядковое число, а нужен индекс, потому отнимаем 1
+                if (indexOfDeletionStudent >= 0) {
+                    listOfStudents.DeleteStudent(indexOfDeletionStudent);
+                    cout << "SUCCESS!" << endl;
+                }
+                else
+                    cout << "[Incorrect index]" << endl;
             }
-          else
-              cout << "[Student not founded]" << endl;
+            else cout << "List is a empty!"<<endl; 
             system("pause");
-            system("CLS"); 
             break;
         case 3:
             cout << "Count of students: " << listOfStudents.LengthOfList() << endl;
             system("pause");
-            system("CLS");
             break;
         case 4:
             cout << "Enter the first name of student for search: ";
@@ -332,23 +332,23 @@ int main()
             indexOfFindedStudent = listOfStudents.FindStudent(firstName, secondName);
             if (indexOfFindedStudent != -1) {
                 listOfStudents.ShowStudent(indexOfFindedStudent);
-            cout << "SUCCESS!" << endl;
+                cout << "SUCCESS!" << endl;
             }
             else
-            cout << "[Student not founded]" << endl;
+                cout << "[Student not founded]" << endl;
             system("pause");
-            system("CLS");
             break;
 
         case 5:
             listOfStudents.ShowListOfStudents();
             system("pause");
-            system("CLS");
             break;
+        case 6:
+            system("CLS");
+            break; 
         default:
             cout << "Unknown operation, try again" << endl;
             system("pause");
-            system("CLS");
             break;
         }
     }
